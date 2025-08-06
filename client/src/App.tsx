@@ -1,64 +1,26 @@
-// import { useState } from 'react';
-// import axios from 'axios';
+import Navbar from "./components/Navbar";
+import AnimatedWeather from "./components/AnimatedWeather";
+import WeatherData from "./components/WeatherData";
+import { CityProvider } from "./components/CityContext";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// function App() {
-//   const [username, setUsername] = useState('');
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [message, setMessage] = useState('');
-
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     try {
-//       const res = await axios.post('/register', {
-//         username,
-//         email,
-//         password,
-//       });
-//       setMessage('🎉 נרשמת בהצלחה!');
-//     } catch (err) {
-//       console.error(err);
-//       setMessage('❌ שגיאה בהרשמה');
-//     }
-//   };
-
-//   return (
-//     <div style={{ padding: 20 }}>
-//       <h2>הרשמה</h2>
-//       <form onSubmit={handleSubmit}>
-//         <input
-//           placeholder="שם משתמש"
-//           value={username}
-//           onChange={e => setUsername(e.target.value)}
-//         /><br />
-//         <input
-//           placeholder="אימייל"
-//           value={email}
-//           onChange={e => setEmail(e.target.value)}
-//         /><br />
-//         <input
-//           placeholder="סיסמה"
-//           type="password"
-//           value={password}
-//           onChange={e => setPassword(e.target.value)}
-//         /><br />
-//         <button type="submit">הרשמה</button>
-//       </form>
-//       <p>{message}</p>
-//     </div>
-//   );
-// }
-//
-// export default App;
-import React from 'react'
-import Login from './components/Login'
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import MoreInfo from "./pages/MoreInfo";
 
 const App = () => {
   return (
-    <div>
-      <Login/>
-    </div>
-  )
-}
+      <CityProvider>
+        <Navbar />
+        <WeatherData />
+        <AnimatedWeather />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/more-info" element={<MoreInfo />} />
+        </Routes>
+      </CityProvider>
+  );
+};
 
-export default App
+export default App;
