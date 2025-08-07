@@ -13,11 +13,12 @@ import {
   useMediaQuery,
   TextField,
   Autocomplete,
+  Button,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useCity } from "./CityContext";
 import { Link, useNavigate } from "react-router-dom";
-
+import HomeIcon from "@mui/icons-material/Home";
 const pages = [
   { label: "מידע נוסף", path: "/more-info" },
   { label: "הרשמה", path: "/register" },
@@ -62,7 +63,7 @@ const Navbar = () => {
       <List>
         {pages.map(({ label, path }) => (
           <ListItem key={label} disablePadding>
-            <ListItemButton  component={Link} to={path}>
+            <ListItemButton component={Link} to={path}>
               <ListItemText primary={label} />
             </ListItemButton>
           </ListItem>
@@ -88,6 +89,14 @@ const Navbar = () => {
           alignItems: "center",
         }}
       >
+        <IconButton
+          color="inherit"
+          onClick={() => navigate("/")}
+          aria-label="דף הבית"
+          size="large"
+        >
+          <HomeIcon />
+        </IconButton>
         {/* צד ימין - ניווט */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           {isMobile ? (
@@ -115,7 +124,11 @@ const Navbar = () => {
                   variant="button"
                   component={Link}
                   to={path}
-                  sx={{ color: "inherit", textDecoration: "none", cursor: "pointer" }}
+                  sx={{
+                    color: "inherit",
+                    textDecoration: "none",
+                    cursor: "pointer",
+                  }}
                 >
                   {label}
                 </Typography>
@@ -128,7 +141,6 @@ const Navbar = () => {
         <Typography
           variant="h6"
           sx={{
-            position: "absolute",
             left: 0,
             right: 0,
             mx: "auto",
@@ -137,11 +149,11 @@ const Navbar = () => {
           }}
           onClick={() => navigate("/")}
         >
-          מזג אוויר
+          מזגן הטבע
         </Typography>
 
-        {/* צד שמאל - Autocomplete חיפוש */}
-        <Box>
+        {/* צד שמאל - חיפוש וכפתור דף הבית */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <Autocomplete
             freeSolo
             options={cities}
@@ -161,10 +173,6 @@ const Navbar = () => {
                 placeholder="בחר או הקלד עיר"
                 size="small"
                 variant="outlined"
-                inputProps={{
-                  ...params.inputProps,
-                  style: { textAlign: "right" },
-                }}
               />
             )}
           />

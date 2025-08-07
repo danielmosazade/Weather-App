@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -23,6 +24,8 @@ function Register() {
   };
 
   return (
+    <>
+    <Navbar/>
     <div style={{ padding: 20 }}>
       <h2>הרשמה</h2>
       <form onSubmit={handleSubmit}>
@@ -46,6 +49,7 @@ function Register() {
       </form>
       <p>{message}</p>
     </div>
+    </>
   );
 }
 

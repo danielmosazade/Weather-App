@@ -1,8 +1,9 @@
 import React from 'react'
+import Navbar from '../components/Navbar'
 
 const MoreInfo = () => {
   return (
-    <div>MoreInfo</div>
+    <div><Navbar/></div>
   )
 }
 

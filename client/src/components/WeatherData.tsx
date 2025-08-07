@@ -72,7 +72,7 @@ const groupForecastByDay = (list: ForecastItem[]): DailyForecast[] => {
 
 const DEBOUNCE_DELAY = 500;
 
-const Forecast = () => {
+const WeatherData = () => {
   const { city } = useCity();
 
   const [forecast, setForecast] = useState<DailyForecast[]>([]);
@@ -170,4 +170,4 @@ const Forecast = () => {
   );
 };
 
-export default Forecast;
+export default WeatherData;

@@ -1,4 +1,5 @@
 import React, { useState, FormEvent } from "react";
+import Navbar from "../components/Navbar";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -32,8 +33,11 @@ const Login: React.FC = () => {
       setMessage("⚠️ Login failed");
     }
   };
+  console.log("first")
 
   return (
+    <>
+    <Navbar/>
     <div style={{ maxWidth: "300px", margin: "2rem auto" }}>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
@@ -57,6 +61,7 @@ const Login: React.FC = () => {
       </form>
       {message && <p style={{ marginTop: "1rem" }}>{message}</p>}
     </div>
+    </>
   );
 };
 
