@@ -1,25 +1,25 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User.js');
-require('dotenv').config();
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User.js");
+require("dotenv").config();
 
 exports.register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-    if (!username || !email || !password)
-      return res.status(400).send('All fields are required');
+    const { username, email, password,role } = req.body;
+    if (!username || !email || !password ||!role)
+      return res.status(400).send("All fields are required");
 
     const existing = await User.findOne({ email });
-    if (existing) return res.status(400).send('Email already exists');
+    if (existing) return res.status(400).send("Email already exists");
 
     const hashed = await bcrypt.hash(password, 10);
-    const user = new User({ username, email, password: hashed });
+    const user = new User({ username, email, password: hashed,role });
     await user.save();
 
-    res.status(201).send('User registered');
+    res.status(201).send("User registered");
   } catch (err) {
     console.error(err);
-    res.status(500).send('Registration error');
+    res.status(500).send("Registration error");
   }
 };
 
@@ -28,21 +28,19 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(401).send('User not found');
+    if (!user) return res.status(401).send("User not found");
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).send('Invalid password');
+    if (!isMatch) return res.status(401).send("Invalid password");
 
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
     res.json({ token, username: user.username });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Login error');
+    res.status(500).send("Login error");
   }
 };
 
@@ -50,10 +48,46 @@ exports.deleteUser = async (req, res) => {
   try {
     const { username } = req.params;
     const deleted = await User.findOneAndDelete({ username });
-    if (!deleted) return res.status(404).send('User not found');
+    if (!deleted) return res.status(404).send("User not found");
     res.send(`User '${username}' deleted`);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Delete error');
+    res.status(500).send("Delete error");
+  }
+};
+exports.updateUsername = async (req, res) => {
+  try {
+    const { oldUsername, newUsername } = req.body;
+
+    if (!oldUsername || !newUsername)
+      return res.status(400).send("Both old and new usernames are required");
+
+    const updatedUser = await User.findOneAndUpdate(
+      { username: oldUsername },
+      { username: newUsername },
+      { new: true } // מחזיר את המשתמש לאחר העדכון
+    );
+
+    if (!updatedUser) return res.status(404).send("User not found");
+
+    res.send(`Username updated to '${updatedUser.username}'`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error updating username");
+  }
+};
+
+
+exports.getCurrentUser = async (req, res) => {
+  try {
+    const userId = req.user.userId; 
+
+    const user = await User.findById(userId).select("-password");
+    if (!user) return res.status(404).send("User not found");
+
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error getting user data");
   }
 };

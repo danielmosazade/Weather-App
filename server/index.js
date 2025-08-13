@@ -1,11 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const cors = require('cors');
 
 const authRoutes = require('./routes/Auth');
 
 const app = express();
 app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:3000', // או הפורט שבו רץ ה-React
+  credentials: true
+}));
 
 // חיבור למסד נתונים
 mongoose
