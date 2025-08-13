@@ -8,11 +8,12 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MoreInfo from "./pages/MoreInfo";
 import Home from "./pages/Home";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const App = () => {
   return (
       <CityProvider>
-      
+         <ToastContainer />
 {/* <Home/> */}
         <Routes>
           <Route path="/" element={<Home />} />

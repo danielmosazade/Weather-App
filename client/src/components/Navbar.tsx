@@ -19,6 +19,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useCity } from "./CityContext";
 import { Link, useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
+
 const pages = [
   { label: "מידע נוסף", path: "/more-info" },
   { label: "הרשמה", path: "/register" },
@@ -53,6 +54,7 @@ const Navbar = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
   const { city, setCity } = useCity();
   const navigate = useNavigate();
+  const { username } = useCity();
 
   const drawerContent = (
     <Box
@@ -117,7 +119,10 @@ const Navbar = () => {
               </Drawer>
             </>
           ) : (
+            
             <Box sx={{ display: "flex", gap: 3 }}>
+                            <Typography> שלום {username}</Typography>
+
               {pages.map(({ label, path }) => (
                 <Typography
                   key={label}
