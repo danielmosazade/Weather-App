@@ -54,8 +54,7 @@ const Navbar = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
   const { city, setCity } = useCity();
   const navigate = useNavigate();
-  const { username } = useCity();
-
+  const { username,isAdmin } = useCity();
   const drawerContent = (
     <Box
       sx={{ width: 250 }}
@@ -119,9 +118,8 @@ const Navbar = () => {
               </Drawer>
             </>
           ) : (
-            
             <Box sx={{ display: "flex", gap: 3 }}>
-                            <Typography> שלום {username}</Typography>
+              <Typography> שלום {username}</Typography>
 
               {pages.map(({ label, path }) => (
                 <Typography

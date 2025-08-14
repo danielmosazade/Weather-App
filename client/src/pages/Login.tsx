@@ -32,6 +32,7 @@ const Login: React.FC = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
+        credentials: "include", // שולח את ה-cookie עם הבקשה
       });
 
       if (!res.ok) {
@@ -45,10 +46,9 @@ const Login: React.FC = () => {
         return;
       }
 
-      const data: { token: string; username: string; role: string } =
-        await res.json();
+      const data: { username: string; role: string } = await res.json();
 
-      localStorage.setItem("token", data.token);
+      // שמירה ב-context בלבד
       setUsername(data.username);
       setIsAdmin(data.role === "admin");
 
