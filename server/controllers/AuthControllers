@@ -5,15 +5,15 @@ require("dotenv").config();
 
 exports.register = async (req, res) => {
   try {
-    const { username, email, password,role } = req.body;
-    if (!username || !email || !password ||!role)
+    const { username, email, password, role } = req.body;
+    if (!username || !email || !password || !role)
       return res.status(400).send("All fields are required");
 
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).send("Email already exists");
 
     const hashed = await bcrypt.hash(password, 10);
-    const user = new User({ username, email, password: hashed,role });
+    const user = new User({ username, email, password: hashed, role });
     await user.save();
 
     res.status(201).send("User registered");
@@ -33,11 +33,21 @@ exports.login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).send("Invalid password");
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { userId: user._id, role: user.role }, // צריך לכלול את userId
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
 
-    res.json({ token, username: user.username });
+    // שולח את ה-token ב-cookie במקום רק ב-json
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: false, // אם זה localhost
+        sameSite: "lax",
+        // maxAge: 3600000, // 1 שעה
+      })
+      .json({ username: user.username, role: user.role });
   } catch (err) {
     console.error(err);
     res.status(500).send("Login error");
@@ -77,10 +87,9 @@ exports.updateUsername = async (req, res) => {
   }
 };
 
-
 exports.getCurrentUser = async (req, res) => {
   try {
-    const userId = req.user.userId; 
+    const userId = req.user.userId;
 
     const user = await User.findById(userId).select("-password");
     if (!user) return res.status(404).send("User not found");
