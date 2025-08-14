@@ -42,6 +42,7 @@ const Login: React.FC = () => {
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
+          style: { textAlign: "center" },
         });
         return;
       }
@@ -52,12 +53,13 @@ const Login: React.FC = () => {
       setUsername(data.username);
       setIsAdmin(data.role === "admin");
 
-      toast.success(`נכנסת בתור ${data.username}`, {
+      toast.success(` שלום ${data.username}`, {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
+        style: { textAlign: "center" },
       });
 
       navigate("/");

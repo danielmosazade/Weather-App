@@ -19,7 +19,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useCity } from "./CityContext";
 import { Link, useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
-
+import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 const pages = [
   { label: "מידע נוסף", path: "/more-info" },
   { label: "הרשמה", path: "/register" },
@@ -54,7 +54,7 @@ const Navbar = () => {
   const isMobile = useMediaQuery("(max-width:768px)");
   const { city, setCity } = useCity();
   const navigate = useNavigate();
-  const { username,isAdmin } = useCity();
+  const { username, isAdmin } = useCity();
   const drawerContent = (
     <Box
       sx={{ width: 250 }}
@@ -98,6 +98,18 @@ const Navbar = () => {
         >
           <HomeIcon />
         </IconButton>
+
+        {isAdmin && (
+          <IconButton
+            color="inherit"
+            onClick={() => navigate("/admin-page")}
+            aria-label="דף אדמין"
+            size="large"
+          >
+            <SupervisorAccountIcon />
+          </IconButton>
+        )}
+
         {/* צד ימין - ניווט */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           {isMobile ? (
@@ -119,8 +131,6 @@ const Navbar = () => {
             </>
           ) : (
             <Box sx={{ display: "flex", gap: 3 }}>
-              <Typography> שלום {username}</Typography>
-
               {pages.map(({ label, path }) => (
                 <Typography
                   key={label}
@@ -138,6 +148,9 @@ const Navbar = () => {
               ))}
             </Box>
           )}
+        </Box>
+        <Box padding={1}>
+          <Typography> שלום {username}</Typography>
         </Box>
 
         {/* כותרת ממורכזת */}

@@ -8,18 +8,19 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MoreInfo from "./pages/MoreInfo";
 import Home from "./pages/Home";
+import AdminPage from "./pages/AdminPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const App = () => {
   return (
       <CityProvider>
          <ToastContainer />
-{/* <Home/> */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/more-info" element={<MoreInfo />} />
+          <Route path="/admin-page" element={<AdminPage />} />
         </Routes>
       </CityProvider>
   );
