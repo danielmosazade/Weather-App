@@ -104,7 +104,6 @@ exports.getCurrentUser = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     if (req.user.role !== "admin") return res.status(403).send("Access denied");
-
     const users = await User.find().select("-password");
     res.json(users);
   } catch (err) {
