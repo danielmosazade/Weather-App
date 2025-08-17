@@ -13,15 +13,19 @@ import {
   useMediaQuery,
   TextField,
   Autocomplete,
+  ListItemIcon,
+  Divider,
+  Snackbar,
   Button,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useCity } from "./CityContext";
-import { Link, useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
+import { useCity } from "./CityContext";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import LogoutIcon from "@mui/icons-material/Logout";
 const pages = [
-  { label: "מידע נוסף", path: "/more-info" },
+  { label: "מידע  נוסף ", path: "/more-info" },
   { label: "הרשמה", path: "/register" },
   { label: "כניסה", path: "/login" },
 ];
@@ -51,13 +55,34 @@ const cities = [
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const isMobile = useMediaQuery("(max-width:768px)");
-  const { city, setCity } = useCity();
+  const { city, setCity, username, isAdmin, setUsername, setIsAdmin } =
+    useCity();
   const navigate = useNavigate();
-  const { username, isAdmin } = useCity();
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+  const isMobile = useMediaQuery("(max-width:768px)");
+  const [openToast, SetOpenToast] = useState<boolean>(false);
+  const [openlogoutToast, SetOpenLogToast] = useState<boolean>(false);
+  const handleLogout = () => {
+    SetOpenToast(true);
+  };
+  const handleClick = () => SetOpenToast(true);
+  const handleClose = () => SetOpenToast(false);
+  const confirmLogout = () => {
+    setUsername("");
+    setIsAdmin(false);
+    localStorage.removeItem("token");
+    SetOpenToast(true);
+    setTimeout(() => {
+      navigate("/");
+    }, 1000);
+    SetOpenToast(false);
+    SetOpenLogToast(true);
+  };
+
   const drawerContent = (
     <Box
-      sx={{ width: 250 }}
+      sx={{ width: 250, padding: 2 }}
       role="presentation"
       onClick={() => setDrawerOpen(false)}
     >
@@ -69,132 +94,143 @@ const Navbar = () => {
             </ListItemButton>
           </ListItem>
         ))}
+
+        <Divider sx={{ marginY: 1 }} />
+        {username && (
+          <ListItem disablePadding>
+            <ListItemButton onClick={handleLogout}>
+              <ListItemIcon>
+                <LogoutIcon sx={{ color: "red" }} />
+              </ListItemIcon>
+              <ListItemText primary="התנתק" sx={{ color: "red" }} />
+            </ListItemButton>
+          </ListItem>
+        )}
       </List>
     </Box>
   );
 
   return (
-    <AppBar
-      position="static"
-      sx={{
-        backgroundColor: "#355c7d",
-        color: "#ffffff",
-        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
-      }}
-    >
-      <Toolbar
+    <>
+      <AppBar
+        position="static"
         sx={{
-          display: "flex",
-          flexDirection: "row-reverse",
-          justifyContent: "space-between",
-          alignItems: "center",
+          backgroundColor: "#355c7d",
+          color: "#ffffff",
+          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
         }}
       >
-        <IconButton
-          color="inherit"
-          onClick={() => navigate("/")}
-          aria-label="דף הבית"
-          size="large"
+        <Toolbar
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            position: "relative",
+          }}
         >
-          <HomeIcon />
-        </IconButton>
+          {/* צד ימין */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <IconButton
+              color="inherit"
+              onClick={() => navigate("/")}
+              aria-label="דף הבית"
+              size="large"
+            >
+              <HomeIcon />
+            </IconButton>
 
-        {isAdmin && (
-          <IconButton
-            color="inherit"
-            onClick={() => navigate("/admin-page")}
-            aria-label="דף אדמין"
-            size="large"
-          >
-            <SupervisorAccountIcon />
-          </IconButton>
-        )}
-
-        {/* צד ימין - ניווט */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          {isMobile ? (
-            <>
+            {isAdmin && (
               <IconButton
                 color="inherit"
-                edge="end"
-                onClick={() => setDrawerOpen(true)}
+                onClick={() => navigate("/admin-page")}
+                aria-label="דף אדמין"
+                size="large"
               >
-                <MenuIcon />
+                <SupervisorAccountIcon />
               </IconButton>
-              <Drawer
-                anchor="right"
-                open={drawerOpen}
-                onClose={() => setDrawerOpen(false)}
-              >
-                {drawerContent}
-              </Drawer>
-            </>
-          ) : (
-            <Box sx={{ display: "flex", gap: 3 }}>
-              {pages.map(({ label, path }) => (
-                <Typography
-                  key={label}
-                  variant="button"
-                  component={Link}
-                  to={path}
-                  sx={{
-                    color: "inherit",
-                    textDecoration: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  {label}
-                </Typography>
-              ))}
-            </Box>
-          )}
-        </Box>
-        <Box padding={1}>
-          <Typography> שלום {username}</Typography>
-        </Box>
+            )}
+          </Box>
 
-        {/* כותרת ממורכזת */}
-        <Typography
-          variant="h6"
-          sx={{
-            left: 0,
-            right: 0,
-            mx: "auto",
-            textAlign: "center",
-            cursor: "pointer",
-          }}
-          onClick={() => navigate("/")}
-        >
-          מזגן הטבע
-        </Typography>
-
-        {/* צד שמאל - חיפוש וכפתור דף הבית */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Autocomplete
-            freeSolo
-            options={cities}
-            value={city}
-            onInputChange={(event, newValue) => {
-              setCity(newValue);
-            }}
+          {/* מרכז - כותרת ממורכזת */}
+          <Typography
+            variant="h6"
             sx={{
-              backgroundColor: "#fff",
-              borderRadius: "4px",
-              width: 160,
-              direction: "rtl",
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
+              textAlign: "center",
+              cursor: "pointer",
             }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                placeholder="בחר או הקלד עיר"
-                size="small"
-                variant="outlined"
+            onClick={() => navigate("/")}
+          >
+            מזגן הטבע
+          </Typography>
+
+          {/* צד שמאל */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            {isHome && (
+              <Autocomplete
+                freeSolo
+                options={cities}
+                value={city}
+                onInputChange={(event, newValue) => setCity(newValue)}
+                sx={{
+                  backgroundColor: "#fff",
+                  borderRadius: "4px",
+                  width: 160,
+                  direction: "rtl",
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="בחר או הקלד עיר"
+                    size="small"
+                    variant="outlined"
+                  />
+                )}
               />
             )}
-          />
-        </Box>
-      </Toolbar>
-    </AppBar>
+
+            <Typography>שלום {username}</Typography>
+
+            {/* כפתור לפתיחת Drawer תמיד */}
+            <IconButton
+              color="inherit"
+              edge="end"
+              onClick={() => setDrawerOpen(true)}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+
+      {/* Drawer תמיד קיים */}
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      >
+        {drawerContent}
+      </Drawer>
+
+      <Snackbar
+        open={openToast}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        message="אתה בטוח שאתה רוצה להתנתק?"
+        action={
+          <>
+            <Button color="error" size="small" onClick={confirmLogout}>
+              כן
+            </Button>
+            <Button color="inherit" size="small" onClick={handleClose}>
+              לא
+            </Button>
+          </>
+        }
+      />
+    </>
   );
 };
 
