@@ -1,7 +1,8 @@
 import React from 'react';
 import Lottie from 'lottie-react';
-import animationData from '../assets/Rain.json' 
-
+import rain from '../assets/Rain.json' 
+import sun from '../assets/sun.json' 
+//b18f3bcb0124b1fa25c78c721284ef02
 const AnimatedWeather = () => {
   return (
     <div
@@ -18,7 +19,7 @@ const AnimatedWeather = () => {
       }}
     >
       <Lottie
-        animationData={animationData}
+        animationData={rain}
         loop
         autoplay
         style={{ width: '100%', height: '100%' }}

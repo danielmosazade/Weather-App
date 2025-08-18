@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios, { CancelTokenSource } from "axios";
-import { Skeleton } from "@mui/material";
 import { useCity } from "./CityContext";
 
 interface ForecastItem {
@@ -90,9 +89,7 @@ const WeatherData = () => {
 
       axios
         .get<ForecastResponse>(
-          `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(
-            city
-          )}&appid=b18f3bcb0124b1fa25c78c721284ef02&units=metric`,
+          `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=b18f3bcb0124b1fa25c78c721284ef02&units=metric`,
           { cancelToken: source.token }
         )
         .then((response) => {

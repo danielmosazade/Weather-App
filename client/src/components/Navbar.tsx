@@ -191,7 +191,7 @@ const Navbar = () => {
               />
             )}
 
-            <Typography>שלום {username}</Typography>
+            {username &&<Typography>שלום {username}</Typography>}
 
             {/* כפתור לפתיחת Drawer תמיד */}
             <IconButton

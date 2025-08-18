@@ -5,7 +5,13 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-
+//  axios
+//       .get<ForecastResponse>(
+//         `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(
+//           city
+//         )}&appid=&units=metric`,
+//         { cancelToken: source.token }
+//       )
 interface CityContextType {
   city: string;
   setCity: (city: string) => void;
