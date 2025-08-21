@@ -113,20 +113,20 @@ exports.getAllUsers = async (req, res) => {
 };
 
 // מחיקת משתמש לפי ID
-  exports.deleteUserById = async (req, res) => {
-    try {
-      if (req.user.role !== "admin") return res.status(403).send("Access denied");
+exports.deleteUserById = async (req, res) => {
+  try {
+    if (req.user.role !== "admin") return res.status(403).send("Access denied");
 
-      const { id } = req.params;
-      const deleted = await User.findByIdAndDelete(id);
-      if (!deleted) return res.status(404).send("User not found");
+    const { id } = req.params;
+    const deleted = await User.findByIdAndDelete(id);
+    if (!deleted) return res.status(404).send("User not found");
 
-      res.send(`User '${deleted.username}' deleted`);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Delete error");
-    }
-  };
+    res.send(`User '${deleted.username}' deleted`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Delete error");
+  }
+};
 
 // עדכון שם משתמש לפי ID
 exports.updateUsernameById = async (req, res) => {
@@ -150,5 +150,33 @@ exports.updateUsernameById = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Update error");
+  }
+};
+exports.getEmailByUsername = async (req, res) => {
+  console.log(req);
+  const { username } = req.params;
+  try {
+    const user = await User.findOne({ username }, { email: 1, _id: 0 }).lean();
+    if (!user) {
+      return res.status(404).json({ message: "משתמש לא נמצא" });
+    }
+    res.json({ email: user.email });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "שגיאה בשרת" });
+  }
+};
+exports.getUserNameByEmail = async (req, res) => {
+  console.log(req);
+  const { email } = req.params;
+  try {
+    const user = await User.findOne({ email }, { username: 1, _id: 0 }).lean();
+    if (!user) {
+      return res.status(404).json({ message: "איימיל לא נמצא" });
+    }
+    res.json({ username: user.username });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "שגיאה בשרת" });
   }
 };
