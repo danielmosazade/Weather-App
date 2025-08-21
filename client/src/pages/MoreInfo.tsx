@@ -91,6 +91,9 @@ const MoreInfoForecast = () => {
           />
           <CardContent>
             <Typography variant="h5" gutterBottom>
+              {city}
+            </Typography>
+            <Typography variant="h5" gutterBottom>
               טמפרטורה נוכחית: {first.main.temp} מעלות 
             </Typography>
 
