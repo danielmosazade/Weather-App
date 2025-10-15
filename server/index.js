@@ -7,10 +7,16 @@
 
   const app = express();
   app.use(express.json());
-  app.use(cors({
-    origin: 'http://localhost:3000', // או הפורט שבו רץ ה-React
-    credentials: true
-  }));
+ const allowedOrigins = [
+  'http://localhost:3000',
+  'https://mzgn-htb.onrender.com/' // 👈 החלף ל-URL האמיתי של ה-Frontend שלך
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+
   const cookieParser = require("cookie-parser");
   app.use(cookieParser());
 
