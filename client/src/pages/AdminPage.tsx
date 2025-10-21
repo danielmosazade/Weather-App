@@ -24,7 +24,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import { toast } from "react-toastify";
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const API_BASE_URL = "https://mzgn-htb.onrender.com";
 
 interface User {
   _id: string;

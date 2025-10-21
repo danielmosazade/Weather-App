@@ -6,7 +6,7 @@ require("dotenv").config();
 exports.register = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
-    if (!username || !email || !password )
+    if (!username || !email || !password)
       return res.status(400).send("All fields are required");
 
     const existing = await User.findOne({ email });
@@ -43,9 +43,8 @@ exports.login = async (req, res) => {
     res
       .cookie("token", token, {
         httpOnly: true,
-        secure: false, // אם זה localhost
-        sameSite: "lax",
-        // maxAge: 3600000, // 1 שעה
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       })
       .json({ username: user.username, role: user.role });
   } catch (err) {
@@ -103,7 +102,8 @@ exports.getCurrentUser = async (req, res) => {
 // מביא את כל המשתמשים (רק אדמין)
 exports.getAllUsers = async (req, res) => {
   try {
-    if (req.user.role !== "admin") return res.status(403).send("Access denied");
+    if (!req.user || req.user.role !== "admin") return res.status(403).send("Access denied");
+
     const users = await User.find().select("-password");
     res.json(users);
   } catch (err) {

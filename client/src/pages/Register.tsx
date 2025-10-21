@@ -12,7 +12,7 @@ function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post("api/auth/register", {
+      const res = await axios.post("https://mzgn-htb.onrender.com/api/auth/register", {
         username,
         email,
         password,
