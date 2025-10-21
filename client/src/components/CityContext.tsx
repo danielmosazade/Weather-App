@@ -30,7 +30,7 @@ export const CityProvider = ({ children }: { children: ReactNode }) => {
     // בדיקה אוטומטית אם המשתמש מחובר
     const fetchUser = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/auth/me`, {
+        const res = await fetch(`https://mzgn-htb.onrender.com/api/auth/me`, {
             method: "GET",
           credentials: "include", // שולח את ה-cookie
         });

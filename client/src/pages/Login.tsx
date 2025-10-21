@@ -26,14 +26,17 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
+    console.log(process.env.REACT_APP_SERVER_URL);
     try {
-      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-        credentials: "include", // שולח את ה-cookie עם הבקשה
-      });
+      const res = await fetch(
+        `https://mzgn-htb.onrender.com/api/auth/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+          credentials: "include", // שולח את ה-cookie עם הבקשה
+        }
+      );
 
       if (!res.ok) {
         toast.error("⚠️נתונים שגואים נסה שוב", {

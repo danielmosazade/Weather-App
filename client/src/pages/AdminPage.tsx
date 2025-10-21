@@ -24,6 +24,8 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import { toast } from "react-toastify";
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
 interface User {
   _id: string;
   username: string;
@@ -40,7 +42,7 @@ const AdminPage: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("/api/auth/users", { withCredentials: true });
+      const res = await axios.get(`${API_BASE_URL}/api/auth/users`, { withCredentials: true });
       setUsers(res.data);
     } catch (err) {
       console.error(err);
@@ -52,7 +54,7 @@ const AdminPage: React.FC = () => {
   const deleteUser = async (id: string) => {
     if (!window.confirm("אתה בטוח שברצונך למחוק את המשתמש הזה?")) return;
     try {
-      await axios.delete(`/api/auth/users/${id}`, { withCredentials: true });
+      await axios.delete(`${API_BASE_URL}/api/auth/users/${id}`, { withCredentials: true });
       setUsers(users.filter((u) => u._id !== id));
       toast.success("המשתמש נמחק בהצלחה", {
         position: "top-center",
@@ -81,7 +83,7 @@ const AdminPage: React.FC = () => {
 
     try {
       await axios.put(
-        `/api/auth/users/${selectedUser._id}`,
+        `${API_BASE_URL}/api/auth/users/${selectedUser._id}`,
         { newUsername: formData.username },
         {
           withCredentials: true,

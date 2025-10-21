@@ -7,11 +7,10 @@
 
   const app = express();
   app.use(express.json());
- const allowedOrigins = [
-  'http://localhost:3000',
-  'https://mzgn-htb.onrender.com/' // 👈 החלף ל-URL האמיתי של ה-Frontend שלך
+const allowedOrigins = [
+  'https://mzgn-htb.onrender.com',
+  'http://localhost:3000'
 ];
-
 app.use(cors({
   origin: allowedOrigins,
   credentials: true
@@ -33,7 +32,13 @@ app.use(cors({
   app.get('/', (req, res) => {
     res.send('API is running');
   });
+const PORT = process.env.PORT || 5000;
 
-  app.listen(process.env.PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${process.env.PORT}`);
+app.use((err, req, res, next) => {
+  console.error("❌ SERVER ERROR:", err);
+  res.status(500).json({ error: err.message || "Internal Server Error" });
+});
+
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
   });
