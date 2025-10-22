@@ -25,6 +25,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useCity } from "./CityContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const pages = [
   { label: "מידע נוסף", path: "/more-info" },
@@ -80,11 +81,19 @@ const Navbar = () => {
 
       setUsername("");
       setIsAdmin(false);
+    
       localStorage.removeItem("token");
       setOpenToast(false);
       setOpenLogoutToast(true);
       setTimeout(() => navigate("/"), 1000);
-    } catch (err) {}
+      toast("המשתמש התנתק בהצלחה",{
+        position:"top-center"
+      })
+    } catch (err) {
+         toast("המשתמש לא התנתק ",{
+        position:"top-center"
+      })
+    }
   };
 
   const drawerContent = (
