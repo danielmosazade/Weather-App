@@ -13,6 +13,7 @@ interface CityContextType {
   setUsername: (username: string) => void;
   isAdmin: boolean;
   setIsAdmin: (isAdmin: boolean) => void;
+  loading: boolean;
 }
 
 const CityContext = createContext<CityContextType | undefined>(undefined);
@@ -25,6 +26,7 @@ export const CityProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState<boolean>(
     JSON.parse(localStorage.getItem("isAdmin") || "false")
   );
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     // בדיקה אוטומטית אם המשתמש מחובר
@@ -40,6 +42,8 @@ export const CityProvider = ({ children }: { children: ReactNode }) => {
         setIsAdmin(data.role === "admin");
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -48,7 +52,7 @@ export const CityProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <CityContext.Provider
-      value={{ city, setCity, username, setUsername, isAdmin, setIsAdmin }}
+      value={{ city, setCity, username, setUsername, isAdmin, setIsAdmin, loading }}
     >
       {children}
     </CityContext.Provider>
