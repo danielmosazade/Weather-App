@@ -27,12 +27,13 @@ export const CityProvider = ({ children }: { children: ReactNode }) => {
     JSON.parse(localStorage.getItem("isAdmin") || "false")
   );
   const [loading, setLoading] = useState<boolean>(true);
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     // בדיקה אוטומטית אם המשתמש מחובר
     const fetchUser = async () => {
       try {
-        const res = await fetch(`https://mzgn-htb.onrender.com/api/auth/me`, {
+        const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
             method: "GET",
           credentials: "include", // שולח את ה-cookie
         });

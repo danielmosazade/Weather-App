@@ -20,22 +20,19 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   const { setUsername, setIsAdmin } = useCity();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch(
-        `https://mzgn-htb.onrender.com/api/auth/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-          credentials: "include", // שולח את ה-cookie עם הבקשה
-        }
-      );
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+        credentials: "include", // שולח את ה-cookie עם הבקשה
+      });
 
       if (!res.ok) {
         toast.error("⚠️נתונים שגואים נסה שוב", {

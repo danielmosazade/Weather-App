@@ -69,12 +69,12 @@ const Navbar = () => {
 
   const handleLogout = () => setOpenToast(true);
   const handleClose = () => setOpenToast(false);
-  const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   const confirmLogout = async () => {
     try {
       await axios.post(
-        `https://mzgn-htb.onrender.com/api/auth/logout`,
+        `${API_BASE_URL}/api/auth/logout`,
         {},
         { withCredentials: true }
       );

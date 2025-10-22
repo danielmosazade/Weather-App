@@ -8,11 +8,12 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://mzgn-htb.onrender.com/api/auth/register", {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/register`, {
         username,
         email,
         password,
