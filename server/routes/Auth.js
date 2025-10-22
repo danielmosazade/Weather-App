@@ -13,5 +13,7 @@ router.delete("/users/:id", verifyToken, deleteUserById);
 router.put("/users/:id", verifyToken, updateUsernameById);
  router.get("/email/:username", getEmailByUsername) 
  router.get("/bla/:email", getUserNameByEmail) 
+ router.get('/users', verifyToken, verifyAdmin, getAllUsers);
+router.post("/logout", logout);
 
 module.exports = router;

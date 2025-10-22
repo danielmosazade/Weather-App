@@ -24,6 +24,7 @@ import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useCity } from "./CityContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 
 const pages = [
   { label: "מידע נוסף", path: "/more-info" },
@@ -67,14 +68,23 @@ const Navbar = () => {
 
   const handleLogout = () => setOpenToast(true);
   const handleClose = () => setOpenToast(false);
+  const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
-  const confirmLogout = () => {
-    setUsername("");
-    setIsAdmin(false);
-    localStorage.removeItem("token");
-    setOpenToast(false);
-    setOpenLogoutToast(true);
-    setTimeout(() => navigate("/"), 1000);
+  const confirmLogout = async () => {
+    try {
+      await axios.post(
+        `https://mzgn-htb.onrender.com/api/auth/logout`,
+        {},
+        { withCredentials: true }
+      );
+
+      setUsername("");
+      setIsAdmin(false);
+      localStorage.removeItem("token");
+      setOpenToast(false);
+      setOpenLogoutToast(true);
+      setTimeout(() => navigate("/"), 1000);
+    } catch (err) {}
   };
 
   const drawerContent = (
@@ -213,7 +223,11 @@ const Navbar = () => {
             )}
 
             {/* כפתור פתיחת Drawer */}
-            <IconButton color="inherit" edge="end" onClick={() => setDrawerOpen(true)}>
+            <IconButton
+              color="inherit"
+              edge="end"
+              onClick={() => setDrawerOpen(true)}
+            >
               <MenuIcon />
             </IconButton>
           </Box>

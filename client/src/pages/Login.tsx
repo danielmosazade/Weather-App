@@ -26,7 +26,6 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(process.env.REACT_APP_SERVER_URL);
     try {
       const res = await fetch(
         `https://mzgn-htb.onrender.com/api/auth/login`,

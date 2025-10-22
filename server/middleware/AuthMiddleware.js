@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
-
 exports.verifyToken = (req, res, next) => {
-  const token = req.cookies?.token; // <- כאן, לא מה-body
+  const token = req.cookies?.token;
   if (!token) return res.status(401).send("Access Denied");
 
   try {
@@ -9,7 +8,13 @@ exports.verifyToken = (req, res, next) => {
     req.user = verified;
     next();
   } catch (err) {
-    console.log(err)
+    console.error(err);
     res.status(401).send("Invalid Token");
   }
+};
+
+// Optional: לבדוק אם המשתמש הוא admin
+exports.verifyAdmin = (req, res, next) => {
+  if (req.user.role !== "admin") return res.status(403).send("Access denied");
+  next();
 };

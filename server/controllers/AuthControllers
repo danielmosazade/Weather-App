@@ -23,10 +23,16 @@ exports.register = async (req, res) => {
   }
 };
 
+exports.logout = (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,      
+    sameSite: "none",  
+  }).send("Logged out");
+};
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
     const user = await User.findOne({ email });
     if (!user) return res.status(401).send("User not found");
 
@@ -34,25 +40,22 @@ exports.login = async (req, res) => {
     if (!isMatch) return res.status(401).send("Invalid password");
 
     const token = jwt.sign(
-      { userId: user._id, role: user.role }, // צריך לכלול את userId
+      { userId: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
 
-    // שולח את ה-token ב-cookie במקום רק ב-json
-    res
-      .cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      })
-      .json({ username: user.username, role: user.role });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Render חייב https
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 3600000 // 1 שעה
+    }).json({ username: user.username, role: user.role });
   } catch (err) {
     console.error(err);
     res.status(500).send("Login error");
   }
 };
-
 exports.deleteUser = async (req, res) => {
   try {
     const { username } = req.params;

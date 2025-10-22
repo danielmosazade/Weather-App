@@ -40,16 +40,20 @@ const AdminPage: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [formData, setFormData] = useState({ username: "", email: "" });
 
-  const fetchUsers = async () => {
-    try {
-      const res = await axios.get(`${API_BASE_URL}/api/auth/users`, { withCredentials: true });
-      setUsers(res.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchUsers = async () => {
+  try {
+    const res = await axios.get(`${API_BASE_URL}/api/auth/users`, {
+      withCredentials: true
+    });
+    setUsers(res.data);
+  } catch (err) {
+    console.error(err);
+    toast.error("Access Denied – כנראה אתה לא אדמין", { position: "top-center" });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const deleteUser = async (id: string) => {
     if (!window.confirm("אתה בטוח שברצונך למחוק את המשתמש הזה?")) return;
