@@ -2,26 +2,59 @@ import { useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import { Box, Button, TextField, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useCity } from "../components/CityContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+  const { setUsername: setGlobalUsername, setIsAdmin } = useCity();
+
   const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/auth/register`, {
+      // 1️⃣ הרשמה
+      await axios.post(`${API_BASE_URL}/api/auth/register`, {
         username,
         email,
         password,
       });
-      setMessage("🎉 נרשמת בהצלחה!");
-    } catch (err) {
+
+      // 2️⃣ התחברות אוטומטית
+      const res = await axios.post(
+        `${API_BASE_URL}/api/auth/login`,
+        { email, password },
+        { withCredentials: true }
+      );
+
+      // 3️⃣ שמירת המשתמש בקונטקסט
+      setGlobalUsername(res.data.username);
+      setIsAdmin(res.data.role === "admin");
+
+      // 4️⃣ הודעת הצלחה
+      toast.success("🎉 נרשמת והתחברת בהצלחה!", {
+        position: "top-center",
+        autoClose: 3000,
+        style: { textAlign: "center" },
+      });
+
+      // 5️⃣ מעבר לעמוד הבית
+      navigate("/");
+
+    } catch (err: any) {
       console.error(err);
-      setMessage("❌ שגיאה בהרשמה");
+      toast.error("❌ שגיאה בהרשמה או בהתחברות", {
+        position: "top-center",
+        autoClose: 3000,
+        style: { textAlign: "center" },
+      });
     }
   };
 
@@ -53,11 +86,11 @@ function Register() {
         >
           <Typography variant="h4" component="h2" gutterBottom>
             הרשמה
-          </Typography>{" "}
+          </Typography>
+
           <form onSubmit={handleSubmit}>
             <TextField
               label="שם משתמש"
-              type="שם משתמש"
               value={username}
               required
               fullWidth
@@ -66,7 +99,7 @@ function Register() {
             />
             <TextField
               label="אימייל"
-              type="אימייל"
+              type="email"
               value={email}
               required
               fullWidth
@@ -75,7 +108,7 @@ function Register() {
             />
             <TextField
               label="סיסמה"
-              type="סיסמה"
+              type="password"
               value={password}
               required
               fullWidth
@@ -84,13 +117,8 @@ function Register() {
             />
             <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
               הרשמה
-            </Button>{" "}
+            </Button>
           </form>
-          {message && (
-            <Typography sx={{ mt: 2 }} color="error">
-              {message}
-            </Typography>
-          )}{" "}
         </Box>
       </Box>
     </>

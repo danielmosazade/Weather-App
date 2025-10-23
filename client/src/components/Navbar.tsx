@@ -96,24 +96,47 @@ const Navbar = () => {
     }
   };
 
-  const drawerContent = (
-    <Box
-      sx={{ width: 250, padding: 2 }}
-      role="presentation"
-      onClick={() => setDrawerOpen(false)}
-    >
-      <List>
-        {pages.map(({ label, path }) => (
-          <ListItem key={label} disablePadding>
-            <ListItemButton component={Link} to={path}>
-              <ListItemText primary={label} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+const drawerContent = (
+  <Box
+    sx={{ width: 250, padding: 2 }}
+    role="presentation"
+    onClick={() => setDrawerOpen(false)}
+  >
+    <List>
+      {/* שם המשתמש בראשית ה-Drawer במובייל */}
+      {isMobile && username && (
+        <>
+          <Box
+            sx={{
+              backgroundColor: "#f0f0f0",
+              borderRadius: 1,
+              paddingY: 1.5,
+              paddingX: 2,
+              mb: 1,
+              textAlign: "center",
+            }}
+          >
+            <Typography variant="subtitle1" fontWeight="bold">
+              שלום {username}
+            </Typography>
+          </Box>
+          <Divider sx={{ marginY: 1 }} />
+        </>
+      )}
 
-        {isHome && isMobile && (
-          <>
-            <Divider sx={{ marginY: 1 }} />
+      {pages.map(({ label, path }) => (
+        <ListItem key={label} disablePadding>
+          <ListItemButton component={Link} to={path}>
+            <ListItemText primary={label} />
+          </ListItemButton>
+        </ListItem>
+      ))}
+
+      {/* רק במובייל בדף הבית: חיפוש עיר */}
+      {isMobile && isHome && (
+        <>
+          <Divider sx={{ marginY: 1 }} />
+          <Box onClick={(e) => e.stopPropagation()}>
             <Autocomplete
               freeSolo
               options={cities}
@@ -129,25 +152,28 @@ const Navbar = () => {
                 />
               )}
             />
-          </>
-        )}
+          </Box>
+        </>
+      )}
 
-        {username && (
-          <>
-            <Divider sx={{ marginY: 1 }} />
-            <ListItem disablePadding>
-              <ListItemButton onClick={handleLogout}>
-                <ListItemIcon>
-                  <LogoutIcon sx={{ color: "red" }} />
-                </ListItemIcon>
-                <ListItemText primary="התנתק" sx={{ color: "red" }} />
-              </ListItemButton>
-            </ListItem>
-          </>
-        )}
-      </List>
-    </Box>
-  );
+      {/* התנתקות תמיד אם המשתמש מחובר */}
+      {username && (
+        <>
+          <Divider sx={{ marginY: 1 }} />
+          <ListItem disablePadding>
+            <ListItemButton onClick={handleLogout}>
+              <ListItemIcon>
+                <LogoutIcon sx={{ color: "red" }} />
+              </ListItemIcon>
+              <ListItemText primary="התנתק" sx={{ color: "red" }} />
+            </ListItemButton>
+          </ListItem>
+        </>
+      )}
+    </List>
+  </Box>
+);
+
 
   return (
     <>
