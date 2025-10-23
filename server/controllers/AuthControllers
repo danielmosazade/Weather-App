@@ -183,3 +183,34 @@ exports.getUserNameByEmail = async (req, res) => {
     res.status(500).json({ message: "שגיאה בשרת" });
   }
 };
+
+// עדכון תפקיד משתמש לפי ID
+exports.updateUserRole = async (req, res) => {
+  console.log("=== UPDATE USER ROLE ===");
+  console.log("Params:", req.params);
+  console.log("Body:", req.body);
+  console.log("User from token:", req.user);
+
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+
+    if (!role || !['user', 'admin'].includes(role)) {
+      console.log("❌ Invalid role received:", role);
+      return res.status(400).send("Invalid role");
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, { role }, { new: true });
+
+    if (!updatedUser) {
+      console.log("⚠️ User not found:", id);
+      return res.status(404).send("User not found");
+    }
+
+    console.log("✅ Updated user successfully:", updatedUser.email, "→", updatedUser.role);
+    res.json(updatedUser);
+  } catch (err) {
+    console.error("🔥 Error updating user role:", err);
+    res.status(500).send("Server error");
+  }
+};

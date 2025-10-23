@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import { toast } from "react-toastify";
@@ -68,6 +69,26 @@ const fetchUsers = async () => {
     } catch (err) {
       console.error(err);
       toast.error("שגיאה במחיקת המשתמש", { position: "top-center" });
+    }
+  };
+
+  const toggleAdminRole = async (user: User) => {
+    const newRole = user.role === "admin" ? "user" : "admin";
+    try {
+      await axios.put(
+        `${API_BASE_URL}/api/auth/users/${user._id}/role`,
+        { role: newRole },
+        { withCredentials: true }
+      );
+      toast.success(`התפקיד עודכן ל${newRole === "admin" ? "אדמין" : "משתמש"}`, {
+        position: "top-center",
+        autoClose: 3000,
+        style: { textAlign: "center" },
+      });
+      fetchUsers();
+    } catch (err) {
+      console.error(err);
+      toast.error("שגיאה בעדכון התפקיד", { position: "top-center" });
     }
   };
 
@@ -159,6 +180,13 @@ const fetchUsers = async () => {
                   <TableCell sx={{ p: 1 }}>{user.email}</TableCell>
                   <TableCell sx={{ p: 1 }}>{user.role}</TableCell>
                   <TableCell sx={{ p: 1 }} align="center">
+                    <IconButton
+                      size="small"
+                      color="secondary"
+                      onClick={() => toggleAdminRole(user)}
+                    >
+                      <AdminPanelSettingsIcon fontSize="small" />
+                    </IconButton>
                     <IconButton
                       size="small"
                       color="primary"
