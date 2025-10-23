@@ -12,7 +12,8 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   'http://localhost:3000',
-  'VITE_SERVER_URL=https://mzgn-htb.onrender.com'
+   "https://weatherapp7360.netlify.app",
+   process.env.REACT_APP_API_URL
 ];
 
 app.use(cors({
