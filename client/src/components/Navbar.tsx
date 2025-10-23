@@ -155,6 +155,16 @@ const drawerContent = (
           </Box>
         </>
       )}
+           {isAdmin && isMobile && (
+        <>
+          <Divider sx={{ marginY: 1 }} />
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => navigate("/admin-page")}>
+              <ListItemText primary="ניהול משתמשים" />
+            </ListItemButton>
+          </ListItem>
+        </>
+      )}
 
       {/* התנתקות תמיד אם המשתמש מחובר */}
       {username && (
