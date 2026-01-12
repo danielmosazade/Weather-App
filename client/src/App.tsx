@@ -11,16 +11,23 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const App = () => {
   return (
-      <CityProvider>
-         <ToastContainer />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/more-info" element={<MoreInfo />} />
-          <Route path="/admin-page" element={<ProtectedAdminRoute><AdminPage /></ProtectedAdminRoute>} />
-        </Routes>
-      </CityProvider>
+    <CityProvider>
+      <ToastContainer />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/more-info" element={<MoreInfo />} />
+        <Route
+          path="/admin-page"
+          element={
+            <ProtectedAdminRoute>
+              <AdminPage />
+            </ProtectedAdminRoute>
+          }
+        />
+      </Routes>
+    </CityProvider>
   );
 };
 
